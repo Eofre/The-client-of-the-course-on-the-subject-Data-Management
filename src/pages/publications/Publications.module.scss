@@ -1,0 +1,13 @@
+@import "../../assets/colors/Colors.scss";
+@import "../../assets/configuration/Сonfiguration.scss";
+
+.tools {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background-color: $color-three;
+  padding: 15px;
+  border-radius: $border-radius;
+  align-items: center;
+}

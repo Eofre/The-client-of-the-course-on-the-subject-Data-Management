@@ -1,0 +1,34 @@
+{
+  "publications": [
+    {
+      "id": "0",
+      "title": "Hubr",
+      "cost": 200.0
+    },
+    {
+      "id": "1",
+      "title": "BBC",
+      "cost": 150.0
+    },
+    {
+      "id": "2",
+      "title": "BBC",
+      "cost": 150.0
+    },
+    {
+      "id": "3",
+      "title": "BBC",
+      "cost": 150.0
+    },
+    {
+      "id": "4",
+      "title": "BBC",
+      "cost": 150.0
+    },
+    {
+      "id": "5",
+      "title": "BBC",
+      "cost": 150.0
+    }
+  ]
+}

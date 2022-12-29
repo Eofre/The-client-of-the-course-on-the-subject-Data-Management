@@ -1,0 +1,20 @@
+@import "../../../assets/colors/Colors.scss";
+@import "../../../assets/configuration/Сonfiguration.scss";
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.header {
+  background-color: $color-four;
+  padding: 15px;
+  font-size: 20px;
+}
+
+.row {
+  background-color: $color-three;
+  padding: 15px;
+  border-top: 10px $color-one solid;
+}

@@ -19,10 +19,12 @@ const Table: FC<TableProps> = ({ data, headers, ...rest }) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((row) => (
-          <tr style={{ cursor: "pointer" }}>
-            {Object.values(row).map((item) => (
-              <th className={cl.row}>{item}</th>
+        {data.map((row, index) => (
+          <tr key={index} style={{ cursor: "pointer" }}>
+            {Object.values(row).map((item, index) => (
+              <th key={`${index}fdfd`} className={cl.row}>
+                {item}
+              </th>
             ))}
           </tr>
         ))}

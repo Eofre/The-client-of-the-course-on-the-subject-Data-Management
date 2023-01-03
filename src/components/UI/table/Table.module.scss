@@ -2,19 +2,22 @@
 @import "../../../assets/configuration/Сonfiguration.scss";
 
 .table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
+  width: 70%;
+  margin: 0 auto;
+  padding: 5px 10px;
+  background-color: $color-three;
+  border-radius: $border-radius;
 }
 
 .header {
   background-color: $color-four;
-  padding: 15px;
+  padding: 11px;
   font-size: 20px;
+  border-radius: $border-radius;
 }
 
 .row {
-  background-color: $color-three;
-  padding: 15px;
-  border-top: 10px $color-one solid;
+  padding: 8px;
+  background-color: $color-one;
+  border-radius: $border-radius;
 }

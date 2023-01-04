@@ -6,7 +6,7 @@ import Input from "../../components/UI/input/Input";
 import { Publication } from "../../types/types";
 import Modal from "../../components/UI/modal/Modal";
 import Button from "../../components/UI/button/Button";
-import Service from "../../API/Servise";
+import Service from "../../API/Serviсe";
 
 function Publications() {
   const [modal, setModal] = useState<boolean>(false);

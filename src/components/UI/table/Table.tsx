@@ -1,14 +1,17 @@
 import React, { FC, TableHTMLAttributes } from "react";
+import { FaTrashAlt } from "react-icons/fa";
 import cl from "./Table.module.scss";
 
 interface TableProps extends TableHTMLAttributes<HTMLTableElement> {
   headers: string[];
   data: object[];
+  deleteItem?: (id: any) => void;
 }
 
-const Table: FC<TableProps> = ({ data, headers, ...rest }) => {
+const Table: FC<TableProps> = ({ data, headers, deleteItem, ...rest }) => {
+  console.log(data);
   return (
-    <table className={cl.table} cellSpacing="15" {...rest}>
+    <table className={cl.table} cellSpacing="7" {...rest}>
       <thead>
         <tr>
           {headers.map((row) => (
@@ -26,6 +29,11 @@ const Table: FC<TableProps> = ({ data, headers, ...rest }) => {
                 {item}
               </th>
             ))}
+            <th>
+              <button onClick={() => deleteItem?.(Object.values(row)[0])}>
+                <FaTrashAlt className={cl.icon} />
+              </button>
+            </th>
           </tr>
         ))}
       </tbody>

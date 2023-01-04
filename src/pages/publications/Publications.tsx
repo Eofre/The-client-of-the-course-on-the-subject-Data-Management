@@ -4,10 +4,9 @@ import Container from "../../components/сontainer/Container";
 import cl from "./Publications.module.scss";
 import Input from "../../components/UI/input/Input";
 import { Publication } from "../../types/types";
-import axios from "axios";
 import Modal from "../../components/UI/modal/Modal";
 import Button from "../../components/UI/button/Button";
-import { FaPlusSquare } from "react-icons/fa";
+import Service from "../../API/Servise";
 
 function Publications() {
   const [modal, setModal] = useState<boolean>(false);
@@ -20,25 +19,16 @@ function Publications() {
   }, []);
 
   async function fetchPublications() {
-    try {
-      const response = await axios.get<Publication[]>(
-        "http://localhost:5000/publications"
-      );
-      setPublications(response.data);
-    } catch (e) {
-      alert(e);
-    }
+    const publications = await Service.getAll("publications");
+    setPublications(publications);
   }
 
   async function postPublication() {
-    try {
-      const response = await axios.post("http://localhost:5000/publications", {
-        title,
-        cost,
-      });
-    } catch (e) {
-      alert(e);
-    }
+    await Service.createItem("publications", { title, cost });
+  }
+
+  async function deletePublication(id: string | number) {
+    await Service.deleteItem("publications", id);
   }
 
   function createPublication(e: React.MouseEvent<HTMLButtonElement>) {
@@ -55,12 +45,11 @@ function Publications() {
         <h1>Publications</h1>
         <div className={cl.tools}>
           <Button className={cl.btn} onClick={() => setModal(true)}>
-            Add a publication
+            Add
           </Button>
         </div>
         <Modal visible={modal} setVisible={setModal}>
           <form className={cl.form}>
-            {/* <h3 style={{ color: "#fff" }}>Добавление издания</h3> */}
             <label
               style={{ display: "flex", alignItems: "center", gap: "5px" }}
             >
@@ -87,7 +76,11 @@ function Publications() {
           </form>
         </Modal>
         <div>
-          <Table data={publications} headers={["ID", "Title", "Cost"]} />
+          <Table
+            deleteItem={deletePublication}
+            data={publications}
+            headers={["ID", "Title", "Cost"]}
+          />
         </div>
       </Container>
     </section>

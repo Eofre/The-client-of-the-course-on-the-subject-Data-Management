@@ -7,22 +7,38 @@ import { Publication } from "../../types/types";
 import Modal from "../../components/UI/modal/Modal";
 import Button from "../../components/UI/button/Button";
 import Service from "../../API/Serviсe";
+import { FaSearch } from "react-icons/fa";
 
 function Publications() {
   const [modal, setModal] = useState<boolean>(false);
   const [modalDelete, setModalDelete] = useState<boolean>(false);
+  const [modalUpdate, setModalUpdate] = useState<boolean>(false);
   const [isDelete, setIsDelete] = useState<boolean>(false);
-  const [publications, setPublications] = useState<Publication[]>([]);
+  const [publications, setPublications] = useState([]);
   const [title, setTitle] = useState<string>("");
   const [cost, setCost] = useState<string>("");
+  const [id, setID] = useState<string | number>("");
   const [itemDeleteId, setItemDeleteId] = useState<string | number>("");
+  const [query, setQuery] = useState<string>("");
 
   useEffect(() => {
     fetchPublications();
   }, []);
 
+  useEffect(() => {
+    searchPublications();
+  }, [query]);
+
   async function fetchPublications() {
     const publications = await Service.getAll("publications");
+    setPublications(publications);
+  }
+
+  async function searchPublications() {
+    const publications = await Service.search(
+      "publications",
+      query.toLowerCase()
+    );
     setPublications(publications);
   }
 
@@ -30,10 +46,19 @@ function Publications() {
     await Service.createItem("publications", { title, cost });
   }
 
+  async function updatePublicationApi() {
+    await Service.updateItem("publications", { id, title, cost });
+  }
+
   async function deletePublicationApi(id: string | number) {
     await Service.deleteItem("publications", id);
   }
-
+  function updatePublication() {
+    updatePublicationApi();
+    setModalUpdate(false);
+    setTitle("");
+    setCost("");
+  }
   function deletePublication(id: string | number) {
     setModalDelete(true);
     setItemDeleteId(id);
@@ -62,6 +87,18 @@ function Publications() {
       <Container>
         <h1>Publications</h1>
         <div className={cl.tools}>
+          <div className={cl.search}>
+            <FaSearch className={cl.searchIcon} />
+            <Input
+              className={cl.searchInp}
+              type="search"
+              placeholder="Enter a query (For example: Family)"
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
+          <Button className={cl.btn} onClick={() => fetchPublications()}>
+            Update
+          </Button>
           <Button className={cl.btn} onClick={() => setModal(true)}>
             Add
           </Button>
@@ -104,11 +141,16 @@ function Publications() {
         <div>
           <Table
             deleteItem={deletePublication}
+            updateItem={updatePublication}
             data={publications}
-            headers={["ID", "Title", "Cost"]}
+            headers={["Index", "Title", "Cost"]}
           />
         </div>
       </Container>
+      {/* <div className={cl.help}>
+        <h3>Help</h3>
+        <p>To change a cell, click on it twice with the left mouse button</p>
+      </div> */}
     </section>
   );
 }

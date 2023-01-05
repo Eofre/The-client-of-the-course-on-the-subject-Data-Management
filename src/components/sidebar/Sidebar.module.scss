@@ -29,8 +29,7 @@ main {
   transition: all 0.3s;
 }
 .link:hover {
-  background: $color-one;
-  // color: #000;
+  background: $color-four;
 }
 
 .activeLink {
@@ -39,7 +38,7 @@ main {
   padding: 10px 15px;
   gap: 15px;
   transition: all 0.3s;
-  background: $color-one;
+  background: $color-four;
 }
 
 .bars {

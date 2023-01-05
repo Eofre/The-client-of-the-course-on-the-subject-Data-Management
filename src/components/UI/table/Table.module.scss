@@ -27,6 +27,16 @@
   transition: all 0.4s;
 }
 
+.iconDel {
+  font-size: 20px;
+  transition: all 0.4s;
+  color: rgba(255, 27, 27, 0.822);
+}
+
 .icon:hover {
+  color: $color-four;
+}
+
+.iconDel:hover {
   color: $color-four;
 }

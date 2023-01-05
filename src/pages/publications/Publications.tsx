@@ -10,9 +10,12 @@ import Service from "../../API/Serviсe";
 
 function Publications() {
   const [modal, setModal] = useState<boolean>(false);
+  const [modalDelete, setModalDelete] = useState<boolean>(false);
+  const [isDelete, setIsDelete] = useState<boolean>(false);
   const [publications, setPublications] = useState<Publication[]>([]);
   const [title, setTitle] = useState<string>("");
   const [cost, setCost] = useState<string>("");
+  const [itemDeleteId, setItemDeleteId] = useState<string | number>("");
 
   useEffect(() => {
     fetchPublications();
@@ -27,8 +30,23 @@ function Publications() {
     await Service.createItem("publications", { title, cost });
   }
 
-  async function deletePublication(id: string | number) {
+  async function deletePublicationApi(id: string | number) {
     await Service.deleteItem("publications", id);
+  }
+
+  function deletePublication(id: string | number) {
+    setModalDelete(true);
+    setItemDeleteId(id);
+  }
+
+  function onClickDelete() {
+    deletePublicationApi(itemDeleteId);
+    setModalDelete(false);
+    setItemDeleteId("");
+  }
+  function onClickCancel() {
+    setModalDelete(false);
+    setItemDeleteId("");
   }
 
   function createPublication(e: React.MouseEvent<HTMLButtonElement>) {
@@ -48,7 +66,15 @@ function Publications() {
             Add
           </Button>
         </div>
+        <Modal visible={modalDelete} setVisible={setModalDelete}>
+          <h3>Are you sure you want to delete this entry?</h3>
+          <div className={cl.modalBtns}>
+            <Button onClick={() => onClickDelete()}>Delete</Button>
+            <Button onClick={() => onClickCancel()}>Cancel</Button>
+          </div>
+        </Modal>
         <Modal visible={modal} setVisible={setModal}>
+          <h3>Creating the new entry</h3>
           <form className={cl.form}>
             <label
               style={{ display: "flex", alignItems: "center", gap: "5px" }}
@@ -71,7 +97,7 @@ function Publications() {
               style={{ marginTop: "15px" }}
               onClick={(e) => createPublication(e)}
             >
-              Add a publication
+              Add the publication
             </Button>
           </form>
         </Modal>

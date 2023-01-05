@@ -30,3 +30,9 @@
 .btn:hover {
   box-shadow: $color-four 0px 0px 15px;
 }
+
+.modalBtns {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+}

@@ -6,10 +6,16 @@ interface TableProps extends TableHTMLAttributes<HTMLTableElement> {
   headers: string[];
   data: object[];
   deleteItem?: (id: any) => void;
-  updateItem?: () => void;
+  updateItem?: (id: number | string, title: string, cost: string) => void;
 }
 
-const Table: FC<TableProps> = ({ data, headers, deleteItem, ...rest }) => {
+const Table: FC<TableProps> = ({
+  data,
+  headers,
+  deleteItem,
+  updateItem,
+  ...rest
+}) => {
   return (
     <table className={cl.table} cellSpacing="7" {...rest}>
       <thead>
@@ -30,7 +36,15 @@ const Table: FC<TableProps> = ({ data, headers, deleteItem, ...rest }) => {
               </th>
             ))}
             <th>
-              <button>
+              <button
+                onClick={() =>
+                  updateItem?.(
+                    Object.values(row)[0],
+                    Object.values(row)[1],
+                    Object.values(row)[2]
+                  )
+                }
+              >
                 <FaPencilAlt className={cl.icon} />
               </button>
             </th>

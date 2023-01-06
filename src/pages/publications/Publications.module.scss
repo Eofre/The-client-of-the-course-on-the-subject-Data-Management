@@ -1,20 +1,6 @@
 @import "../../assets/colors/Colors.scss";
 @import "../../assets/configuration/Сonfiguration.scss";
 
-.tools {
-  width: 70%;
-  display: flex;
-  gap: 10px;
-  justify-content: right;
-  background-color: $color-three;
-  padding: 12px 15px;
-  border-radius: $border-radius;
-  align-items: center;
-  margin: 0 auto;
-  margin-top: 20px;
-  margin-bottom: 15px;
-}
-
 .form {
   color: $color-two;
 }
@@ -36,6 +22,7 @@
   display: flex;
   gap: 5px;
   width: 100%;
+  padding: 10px 0px;
 }
 
 .help {
@@ -47,23 +34,4 @@
   max-width: 250px;
   border-radius: $border-radius;
   opacity: 90%;
-}
-.search {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  background-color: $color-one;
-  width: 100%;
-  border-radius: $border-radius;
-  padding: 0px 10px;
-}
-
-.searchInp {
-  background-color: $color-one;
-  padding: 10px 15px;
-  width: 100%;
-}
-
-.searchIcon {
-  color: $color-two;
 }

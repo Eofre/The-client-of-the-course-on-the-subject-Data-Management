@@ -1,13 +1,9 @@
 @import "../../assets/colors/Colors.scss";
 @import "../../assets/configuration/Сonfiguration.scss";
 
-.tools {
-  margin-top: 10px;
-  width: 100%;
+.modalBtns {
   display: flex;
-  justify-content: space-around;
-  background-color: $color-three;
-  padding: 15px;
-  border-radius: $border-radius;
-  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 10px 0px;
 }

@@ -3,20 +3,18 @@ import Table from "../../components/UI/table/Table";
 import Container from "../../components/сontainer/Container";
 import cl from "./Publications.module.scss";
 import Input from "../../components/UI/input/Input";
-import { Publication } from "../../types/types";
 import Modal from "../../components/UI/modal/Modal";
 import Button from "../../components/UI/button/Button";
 import Service from "../../API/Serviсe";
-import { FaSearch } from "react-icons/fa";
+import Tools from "../../components/tools/Tools";
 
 function Publications() {
   const [modal, setModal] = useState<boolean>(false);
   const [modalDelete, setModalDelete] = useState<boolean>(false);
   const [modalUpdate, setModalUpdate] = useState<boolean>(false);
-  const [isDelete, setIsDelete] = useState<boolean>(false);
   const [publications, setPublications] = useState([]);
   const [title, setTitle] = useState<string>("");
-  const [cost, setCost] = useState<string>("");
+  const [cost, setCost] = useState<string | number>("");
   const [id, setID] = useState<string | number>("");
   const [itemDeleteId, setItemDeleteId] = useState<string | number>("");
   const [query, setQuery] = useState<string>("");
@@ -53,12 +51,32 @@ function Publications() {
   async function deletePublicationApi(id: string | number) {
     await Service.deleteItem("publications", id);
   }
-  function updatePublication() {
+  function updatePublication(
+    id: string | number,
+    title: string,
+    cost: string | number
+  ) {
+    setID(id);
+    setTitle(title);
+    setCost(cost);
+    setModalUpdate(true);
+  }
+
+  function onClickUpdate() {
     updatePublicationApi();
     setModalUpdate(false);
+    setID("");
     setTitle("");
     setCost("");
   }
+
+  function onClickCancelUpdate() {
+    setModalUpdate(false);
+    setID("");
+    setTitle("");
+    setCost("");
+  }
+
   function deletePublication(id: string | number) {
     setModalDelete(true);
     setItemDeleteId(id);
@@ -67,6 +85,7 @@ function Publications() {
   function onClickDelete() {
     deletePublicationApi(itemDeleteId);
     setModalDelete(false);
+
     setItemDeleteId("");
   }
   function onClickCancel() {
@@ -82,27 +101,22 @@ function Publications() {
     setCost("");
   }
 
+  function openModalAdd() {
+    setCost("");
+    setTitle("");
+    setID("");
+    setModal(true);
+  }
+
   return (
     <section>
       <Container>
         <h1>Publications</h1>
-        <div className={cl.tools}>
-          <div className={cl.search}>
-            <FaSearch className={cl.searchIcon} />
-            <Input
-              className={cl.searchInp}
-              type="search"
-              placeholder="Enter a query (For example: Family)"
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </div>
-          <Button className={cl.btn} onClick={() => fetchPublications()}>
-            Update
-          </Button>
-          <Button className={cl.btn} onClick={() => setModal(true)}>
-            Add
-          </Button>
-        </div>
+        <Tools
+          setQuery={setQuery}
+          openModalAdd={openModalAdd}
+          update={fetchPublications}
+        />
         <Modal visible={modalDelete} setVisible={setModalDelete}>
           <h3>Are you sure you want to delete this entry?</h3>
           <div className={cl.modalBtns}>
@@ -138,6 +152,32 @@ function Publications() {
             </Button>
           </form>
         </Modal>
+        <Modal visible={modalUpdate} setVisible={setModalUpdate}>
+          <h3>Update the entry</h3>
+          <form className={cl.form}>
+            <label
+              style={{ display: "flex", alignItems: "center", gap: "5px" }}
+            >
+              Title:
+              <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+            </label>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                marginTop: "7px",
+              }}
+            >
+              Cost:
+              <Input value={cost} onChange={(e) => setCost(e.target.value)} />
+            </label>
+            <div className={cl.modalBtns}>
+              <Button onClick={() => onClickUpdate()}>Update</Button>
+              <Button onClick={() => onClickCancelUpdate()}>Cancel</Button>
+            </div>
+          </form>
+        </Modal>
         <div>
           <Table
             deleteItem={deletePublication}
@@ -147,10 +187,6 @@ function Publications() {
           />
         </div>
       </Container>
-      {/* <div className={cl.help}>
-        <h3>Help</h3>
-        <p>To change a cell, click on it twice with the left mouse button</p>
-      </div> */}
     </section>
   );
 }

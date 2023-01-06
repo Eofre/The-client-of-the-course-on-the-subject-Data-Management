@@ -4,6 +4,7 @@ export default class Service {
   static async getAll(url: string) {
     try {
       const response = await axios.get(`http://localhost:5000/${url}`);
+      console.log(response.statusText);
       return response.data;
     } catch (e) {
       alert(e);

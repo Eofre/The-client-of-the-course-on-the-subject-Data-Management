@@ -1,37 +1,128 @@
 import React, { useEffect, useState } from "react";
 import Table from "../../components/UI/table/Table";
 import Container from "../../components/сontainer/Container";
-import cl from "./SubscriberPublications.module.scss";
+import cl from "./Subscriptions.module.scss";
 import Input from "../../components/UI/input/Input";
-import { Publication, Subscriber } from "../../types/types";
-import axios from "axios";
+import Service from "../../API/Serviсe";
+import Tools from "../../components/tools/Tools";
+import Modal from "../../components/UI/modal/Modal";
+import Button from "../../components/UI/button/Button";
 
-function SubscriberPublications() {
-  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+function Subscriptions() {
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [index, setIndex] = useState<string>("");
+  const [id, setId] = useState<string>("");
+  const [monthOfSub, setMonthOfSub] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [modalCreateSubscription, setModalCreateSubscription] =
+    useState<boolean>(false);
 
   useEffect(() => {
-    fetchPublications();
+    fetchSubscriptions();
   }, []);
 
-  async function fetchPublications() {
-    try {
-      const response = await axios.get<Subscriber[]>(
-        "http://localhost:5000/subscriptions"
-      );
-      setSubscribers(response.data);
-      console.log(response.data);
-    } catch (e) {
-      alert(e);
-    }
+  async function fetchSubscriptions() {
+    const subscriptions = await Service.getAll("subscriptions");
+    setSubscriptions(subscriptions);
   }
 
+  async function createSubscription() {
+    await Service.createItem("subscriptions", {
+      index,
+      id,
+      monthOfSub,
+      startDate,
+    });
+  }
+
+  async function handleCreateSubscription(
+    e: React.MouseEvent<HTMLButtonElement>
+  ) {
+    await createSubscription();
+    setModalCreateSubscription(false);
+    await fetchSubscriptions();
+  }
+
+  function handleOpenModalCreateSubscription() {
+    setId("");
+    setIndex("");
+    setMonthOfSub("");
+    setStartDate("");
+    setModalCreateSubscription(true);
+  }
+
+  function handleCreateSubscriptionCancel() {
+    setModalCreateSubscription(false);
+  }
   return (
     <section>
+      <Modal
+        visible={modalCreateSubscription}
+        setVisible={setModalCreateSubscription}
+      >
+        <h3>Creating the new entry</h3>
+        <form className={cl.form}>
+          <label style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            Publication index:
+            <Input value={index} onChange={(e) => setIndex(e.target.value)} />
+          </label>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              marginTop: "7px",
+            }}
+          >
+            Subscriber ID:
+            <Input value={id} onChange={(e) => setId(e.target.value)} />
+          </label>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              marginTop: "7px",
+            }}
+          >
+            Number of subscription months:
+            <Input
+              value={monthOfSub}
+              onChange={(e) => setMonthOfSub(e.target.value)}
+            />
+          </label>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              marginTop: "7px",
+            }}
+          >
+            Subscription start date:
+            <Input
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              placeholder="2023-01-07"
+            />
+          </label>
+          <div className={cl.modalBtns}>
+            <Button onClick={(e) => handleCreateSubscription(e)}>Create</Button>
+            <Button onClick={() => handleCreateSubscriptionCancel()}>
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </Modal>
       <Container>
         <h1>Subscriptions</h1>
+        <Tools
+          openModalAdd={handleOpenModalCreateSubscription}
+          update={fetchSubscriptions}
+        />
         <div>
           <Table
-            data={subscribers}
+            data={subscriptions}
             headers={["Index", "ID", "Month of subscription", "Start date"]}
           />
         </div>
@@ -40,4 +131,4 @@ function SubscriberPublications() {
   );
 }
 
-export default SubscriberPublications;
+export default Subscriptions;

@@ -130,21 +130,14 @@ function Subscribers() {
       >
         <h3>Creating the new entry</h3>
         <form className={cl.form}>
-          <label style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <label>
             Full name:
             <Input
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
           </label>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              marginTop: "7px",
-            }}
-          >
+          <label>
             Address:
             <Input
               value={address}
@@ -195,7 +188,7 @@ function Subscribers() {
         </form>
       </Modal>
       <Container>
-        <h1>Subscribers</h1>
+        <h1>Subscribers table</h1>
         <Tools
           openModalAdd={handleOpenModalCreateSubscriber}
           update={fetchSubscribers}

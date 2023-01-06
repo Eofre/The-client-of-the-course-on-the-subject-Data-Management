@@ -111,7 +111,7 @@ function Publications() {
   return (
     <section>
       <Container>
-        <h1>Publications</h1>
+        <h1>Publications table</h1>
         <Tools
           setQuery={setQuery}
           openModalAdd={openModalAdd}

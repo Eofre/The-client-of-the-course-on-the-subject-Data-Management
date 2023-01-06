@@ -62,43 +62,22 @@ function Subscriptions() {
       >
         <h3>Creating the new entry</h3>
         <form className={cl.form}>
-          <label style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <label>
             Publication index:
             <Input value={index} onChange={(e) => setIndex(e.target.value)} />
           </label>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              marginTop: "7px",
-            }}
-          >
+          <label style={{}}>
             Subscriber ID:
             <Input value={id} onChange={(e) => setId(e.target.value)} />
           </label>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              marginTop: "7px",
-            }}
-          >
+          <label>
             Number of subscription months:
             <Input
               value={monthOfSub}
               onChange={(e) => setMonthOfSub(e.target.value)}
             />
           </label>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              marginTop: "7px",
-            }}
-          >
+          <label>
             Subscription start date:
             <Input
               value={startDate}
@@ -115,7 +94,7 @@ function Subscriptions() {
         </form>
       </Modal>
       <Container>
-        <h1>Subscriptions</h1>
+        <h1>Subscriptions table</h1>
         <Tools
           openModalAdd={handleOpenModalCreateSubscription}
           update={fetchSubscriptions}

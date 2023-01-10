@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import Service from "../../API/Serviсe";
 import Pagination from "../../components/pagination/Pagination";
+import Tools from "../../components/tools/Tools";
 import Table from "../../components/UI/table/Table";
 import Container from "../../components/сontainer/Container";
 import styles from "./Audit.module.scss";
@@ -12,7 +13,8 @@ const Audit: FC<AuditProps> = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageCount, setPageCount] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(7);
+  const [limit, setLimit] = useState<number>(6);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     fetchAuditList();
@@ -20,10 +22,10 @@ const Audit: FC<AuditProps> = () => {
 
   useEffect(() => {
     fetchAuditList();
-  }, [currentPage]);
+  }, [currentPage, searchQuery]);
 
   async function fetchAuditList() {
-    const data = await Service.getAll("audit", currentPage, limit);
+    const data = await Service.getAll("audit", currentPage, limit, searchQuery);
     setAuditList(data.events);
     setPageCount(parseInt(data.numberOfPages));
   }
@@ -35,6 +37,7 @@ const Audit: FC<AuditProps> = () => {
     <section>
       <Container>
         <h1>Audit table</h1>
+        <Tools setQuery={setSearchQuery} />
         <div className={styles.table}>
           <Table
             data={auditList}

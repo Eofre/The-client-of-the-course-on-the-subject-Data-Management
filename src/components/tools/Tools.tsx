@@ -6,7 +6,7 @@ import cl from "./Tools.module.scss";
 
 interface ToolsProps {
   setQuery?: (query: string) => void;
-  openModalAdd: () => void;
+  openModalAdd?: () => void;
   update?: () => void;
 }
 
@@ -22,12 +22,20 @@ const Tools: FC<ToolsProps> = ({ setQuery, openModalAdd, update }) => {
           onChange={(e) => setQuery?.(e.target.value)}
         />
       </div>
-      <Button className={cl.btn} onClick={() => update?.()}>
-        Update
-      </Button>
-      <Button className={cl.btn} onClick={() => openModalAdd()}>
-        Add
-      </Button>
+      {!update ? (
+        <></>
+      ) : (
+        <Button className={cl.btn} onClick={() => update?.()}>
+          Update
+        </Button>
+      )}
+      {!openModalAdd ? (
+        <></>
+      ) : (
+        <Button className={cl.btn} onClick={() => openModalAdd?.()}>
+          Add
+        </Button>
+      )}
     </div>
   );
 };

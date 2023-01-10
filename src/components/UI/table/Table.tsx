@@ -17,7 +17,7 @@ const Table: FC<TableProps> = ({
   ...rest
 }) => {
   return (
-    <table className={cl.table} cellSpacing="7" {...rest}>
+    <table className={cl.table} cellSpacing="8" {...rest}>
       <thead>
         <tr>
           {headers.map((row) => (

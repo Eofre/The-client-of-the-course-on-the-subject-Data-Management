@@ -32,6 +32,7 @@ function Publications() {
   const [id, setId] = useState<string | number>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageCount, setPageCount] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(8);
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
@@ -46,6 +47,7 @@ function Publications() {
     const data = await Service.getAll(
       "publications",
       currentPage,
+      limit,
       searchQuery.toLowerCase()
     );
     setPublications(data.publications);
@@ -166,21 +168,23 @@ function Publications() {
         setVisible={setModalCreatePublication}
       >
         <h3>Creating the new entry</h3>
-        <form className={cl.form}>
-          <label>
-            Title:
-            <Input
-              value={titlePublication}
-              onChange={(e) => setTitlePublication(e.target.value)}
-            />
-          </label>
-          <label>
-            Cost:
-            <Input
-              value={costPublication}
-              onChange={(e) => setCostPublication(e.target.value)}
-            />
-          </label>
+        <form>
+          <div>
+            <label>
+              <p>Title:</p>
+              <Input
+                value={titlePublication}
+                onChange={(e) => setTitlePublication(e.target.value)}
+              />
+            </label>
+            <label>
+              <p>Cost:</p>
+              <Input
+                value={costPublication}
+                onChange={(e) => setCostPublication(e.target.value)}
+              />
+            </label>
+          </div>
           <div className={cl.modalBtns}>
             {costPublication === "" || titlePublication === "" ? (
               <Button disabled onClick={(e) => handleCreatePublication(e)}>
@@ -202,32 +206,27 @@ function Publications() {
         setVisible={setModalUpdatePublication}
       >
         <h3>Update the entry</h3>
-        <form className={cl.form}>
-          <label style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            Title:
-            <Input
-              value={titlePublication}
-              onChange={(e) => setTitlePublication(e.target.value)}
-            />
-          </label>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              marginTop: "7px",
-            }}
-          >
-            Cost:
-            <Input
-              value={costPublication}
-              onChange={(e) => setCostPublication(e.target.value)}
-            />
-          </label>
+        <form>
+          <div>
+            <label>
+              <p>Title:</p>
+              <Input
+                value={titlePublication}
+                onChange={(e) => setTitlePublication(e.target.value)}
+              />
+            </label>
+            <label>
+              <p>Cost:</p>
+              <Input
+                value={costPublication}
+                onChange={(e) => setCostPublication(e.target.value)}
+              />
+            </label>
+          </div>
           <div className={cl.modalBtns}>
             {titlePublication === "" ||
             costPublication === "" ||
-            (costPublication === initialCostPublication &&
+            (costPublication == initialCostPublication &&
               titlePublication === initialTitlePublication) ? (
               <Button disabled onClick={() => handleUpdatePublication()}>
                 Update

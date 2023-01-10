@@ -30,6 +30,7 @@
   font-size: 21px;
   transform: scale(0.5);
   transition: all 0.3s;
+  gap: 20px;
 }
 
 .modal__content.active {
@@ -44,10 +45,24 @@
 h3 {
   font-size: 25px;
   color: $color-two;
-  margin-bottom: 15px;
 }
 
 p {
   font-size: 20px;
-  margin-bottom: 15px;
+}
+
+label {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 2px 0px;
+  p {
+    width: 30%;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }

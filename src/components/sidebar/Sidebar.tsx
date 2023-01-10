@@ -6,6 +6,7 @@ import {
   FaHome,
   FaUsers,
   FaBookReader,
+  FaDesktop,
 } from "react-icons/fa";
 import { Link, NavLink } from "react-router-dom";
 
@@ -33,10 +34,15 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
       icon: <FaUsers />,
     },
     {
-      path: "/subscriberPublications",
-      name: "Subscriptions",
-      icon: <FaBookReader />,
+      path: "/audit",
+      name: "Audit",
+      icon: <FaDesktop />,
     },
+    // {
+    //   path: "/subscriberPublications",
+    //   name: "Subscriptions",
+    //   icon: <FaBookReader />,
+    // },
   ];
   return (
     <div style={{ display: "flex" }}>

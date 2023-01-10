@@ -25,11 +25,13 @@ function Subscribers() {
   const [address, setAddress] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [id, setId] = useState<string | number>("");
+  const [initialFullName, setInitialTFullName] = useState<string>("");
+  const [initialAddress, setInitialAddress] = useState<string>("");
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageCount, setPageCount] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(8);
   const [message, setMessage] = useState<string>("");
-
-  const [isUpdate, setIsUpdate] = useState<boolean>(true);
 
   useEffect(() => {
     fetchSubscribers();
@@ -43,6 +45,7 @@ function Subscribers() {
     const data = await Service.getAll(
       "subscribers",
       currentPage,
+      limit,
       searchQuery.toLowerCase()
     );
     setSubscribers(data.subscribers);
@@ -98,6 +101,10 @@ function Subscribers() {
     setId(id);
     setFullName(fullName);
     setAddress(address);
+
+    setInitialAddress(address);
+    setInitialTFullName(fullName);
+
     setModalUpdateSubscriber(true);
   }
 
@@ -152,21 +159,23 @@ function Subscribers() {
         setVisible={setModalCreateSubscriber}
       >
         <h3>Creating the new entry</h3>
-        <form className={cl.form}>
-          <label>
-            Full name:
-            <Input
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-          </label>
-          <label>
-            Address:
-            <Input
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </label>
+        <form>
+          <div>
+            <label>
+              <p>Name:</p>
+              <Input
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
+            </label>
+            <label>
+              <p>Address:</p>
+              <Input
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+            </label>
+          </div>
           <div className={cl.modalBtns}>
             {address === "" || fullName === "" ? (
               <Button disabled onClick={(e) => handleCreateSubscriber(e)}>
@@ -187,29 +196,35 @@ function Subscribers() {
       >
         <h3>Update the entry</h3>
         <form className={cl.form}>
-          <label style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            Full name:
-            <Input
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-          </label>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              marginTop: "7px",
-            }}
-          >
-            Address:
-            <Input
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </label>
+          <div>
+            <label
+              style={{ display: "flex", alignItems: "center", gap: "5px" }}
+            >
+              <p>Name:</p>
+              <Input
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
+            </label>
+            <label>
+              <p>Address:</p>
+              <Input
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+            </label>
+          </div>
+
           <div className={cl.modalBtns}>
-            <Button onClick={() => handleUpdateSubscriber()}>Update</Button>
+            {fullName === "" ||
+            address === "" ||
+            (fullName === initialFullName && address === initialAddress) ? (
+              <Button disabled onClick={() => handleUpdateSubscriber()}>
+                Update
+              </Button>
+            ) : (
+              <Button onClick={() => handleUpdateSubscriber()}>Update</Button>
+            )}
             <Button onClick={() => handleUpdateSubscriberCancel()}>
               Cancel
             </Button>

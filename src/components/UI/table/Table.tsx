@@ -35,24 +35,32 @@ const Table: FC<TableProps> = ({
                 {item}
               </th>
             ))}
-            <th>
-              <button
-                onClick={() =>
-                  updateItem?.(
-                    Object.values(row)[0],
-                    Object.values(row)[1],
-                    Object.values(row)[2]
-                  )
-                }
-              >
-                <FaPencilAlt className={cl.icon} />
-              </button>
-            </th>
-            <th>
-              <button onClick={() => deleteItem?.(Object.values(row)[0])}>
-                <FaTrashAlt className={cl.icon} />
-              </button>
-            </th>
+            {!updateItem ? (
+              <></>
+            ) : (
+              <th>
+                <button
+                  onClick={() =>
+                    updateItem?.(
+                      Object.values(row)[0],
+                      Object.values(row)[1],
+                      Object.values(row)[2]
+                    )
+                  }
+                >
+                  <FaPencilAlt className={cl.icon} />
+                </button>
+              </th>
+            )}
+            {!deleteItem ? (
+              <></>
+            ) : (
+              <th>
+                <button onClick={() => deleteItem?.(Object.values(row)[0])}>
+                  <FaTrashAlt className={cl.icon} />
+                </button>
+              </th>
+            )}
           </tr>
         ))}
       </tbody>

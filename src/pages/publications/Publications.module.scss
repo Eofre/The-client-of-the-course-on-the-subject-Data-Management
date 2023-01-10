@@ -1,10 +1,6 @@
 @import "../../assets/colors/Colors.scss";
 @import "../../assets/configuration/Сonfiguration.scss";
 
-.form {
-  color: $color-two;
-}
-
 .table {
   display: flex;
   flex-direction: column;
@@ -30,22 +26,4 @@
   display: flex;
   gap: 5px;
   width: 100%;
-  padding: 10px 0px;
-}
-
-.help {
-  position: absolute;
-  right: -5px;
-  top: 20%;
-  padding: 20px;
-  background-color: $color-three;
-  max-width: 250px;
-  border-radius: $border-radius;
-  opacity: 90%;
-}
-
-.pag {
-  button {
-    color: #fff;
-  }
 }

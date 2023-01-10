@@ -1,10 +1,15 @@
 import axios, { AxiosError } from "axios";
 
 export default class Service {
-  static async getAll(url: string, page?: number | string, query?: string) {
+  static async getAll(
+    url: string,
+    page: number | string,
+    limit: number,
+    query?: string
+  ) {
     try {
       const response = await axios.get(
-        `http://localhost:5000/${url}?page=${page}$limit=7&query=${query}`
+        `http://localhost:5000/${url}?page=${page}&limit=${limit}&query=${query}`
       );
       console.log(response.statusText);
       return response.data;
@@ -18,8 +23,8 @@ export default class Service {
     try {
       await axios.post(`http://localhost:5000/${url}`, item);
       message = "The entry was created successfully!";
-    } catch (e) {
-      message = "Error";
+    } catch (e: any) {
+      message = e.response.data.message;
     }
     return message;
   }

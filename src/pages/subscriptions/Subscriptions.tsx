@@ -22,8 +22,8 @@ function Subscriptions() {
   }, []);
 
   async function fetchSubscriptions() {
-    const subscriptions = await Service.getAll("subscriptions");
-    setSubscriptions(subscriptions);
+    // const subscriptions = await Service.getAll("subscriptions");
+    // setSubscriptions(subscriptions);
   }
 
   async function createSubscription() {

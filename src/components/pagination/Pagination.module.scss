@@ -1,0 +1,34 @@
+@import "../../assets/colors/Colors.scss";
+@import "../../assets/configuration/Сonfiguration.scss";
+.root {
+  li {
+    display: inline-block;
+
+    a {
+      text-align: center;
+      width: 45px;
+      line-height: 42px;
+      height: 45px;
+      outline: 2px solid $color-four;
+      border-radius: $border-radius;
+      margin-right: 10px;
+      cursor: pointer;
+      display: inline-block;
+      color: $color-two;
+      transition: all 0.4s;
+
+      &:hover {
+        background-color: $color-four;
+        color: $color-two;
+      }
+    }
+  }
+
+  :global {
+    .selected {
+      a {
+        background-color: $color-four;
+      }
+    }
+  }
+}

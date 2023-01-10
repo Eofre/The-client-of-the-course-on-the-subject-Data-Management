@@ -8,54 +8,67 @@ import Tools from "../../components/tools/Tools";
 import Service from "../../API/Serviсe";
 import Button from "../../components/UI/button/Button";
 import Modal from "../../components/UI/modal/Modal";
+import Pagination from "../../components/pagination/Pagination";
 
 function Subscribers() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+
   const [modalCreateSubscriber, setModalCreateSubscriber] =
     useState<boolean>(false);
   const [modalDeleteSubscriber, setModalDeleteSubscriber] =
     useState<boolean>(false);
   const [modalUpdateSubscriber, setModalUpdateSubscriber] =
     useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<boolean>(false);
+
   const [fullName, setFullName] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [id, setId] = useState<string | number>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageCount, setPageCount] = useState<number>(1);
+  const [message, setMessage] = useState<string>("");
+
+  const [isUpdate, setIsUpdate] = useState<boolean>(true);
 
   useEffect(() => {
     fetchSubscribers();
   }, []);
 
   useEffect(() => {
-    searchSubscribers();
-  }, [searchQuery]);
+    fetchSubscribers();
+  }, [currentPage, searchQuery]);
 
   async function fetchSubscribers() {
-    const subscribers = await Service.getAll("subscribers");
-    setSubscribers(subscribers);
+    const data = await Service.getAll(
+      "subscribers",
+      currentPage,
+      searchQuery.toLowerCase()
+    );
+    setSubscribers(data.subscribers);
+    setPageCount(parseInt(data.numberOfPages));
   }
 
   async function createSubscriber() {
-    await Service.createItem("subscribers", {
-      fullName,
-      address,
-    });
-  }
-
-  async function searchSubscribers() {
-    const subscribers = await Service.search(
-      "subscribers",
-      searchQuery.toLowerCase()
+    setMessage(
+      await Service.createItem("subscribers", {
+        fullName,
+        address,
+      })
     );
-    setSubscribers(subscribers);
+    setModalMessage(true);
   }
 
   async function deleteSubscriber() {
-    await Service.deleteItem("subscribers", id);
+    setMessage(await Service.deleteItem("subscribers", id));
+    setModalMessage(true);
   }
 
   async function updateSubscriber() {
-    await Service.updateItem("subscribers", { id, fullName, address });
+    setMessage(
+      await Service.updateItem("subscribers", { id, fullName, address })
+    );
+    setModalMessage(true);
   }
 
   async function handleCreateSubscriber(
@@ -111,14 +124,24 @@ function Subscribers() {
   function handleUpdateSubscriberCancel() {
     setModalUpdateSubscriber(false);
   }
-
+  const onChangePage = (page: number) => {
+    setCurrentPage(page);
+  };
   return (
     <section>
+      <Modal visible={modalMessage} setVisible={setModalMessage}>
+        <h3>Message</h3>
+        <p>{message}</p>
+        <div className={cl.modalBtns}>
+          <Button onClick={() => setModalMessage(false)}>Ok</Button>
+        </div>
+      </Modal>
       <Modal
         visible={modalDeleteSubscriber}
         setVisible={setModalDeleteSubscriber}
       >
-        <h3>Are you sure you want to delete this entry?</h3>
+        <h3>Message</h3>
+        <p>Are you sure you want to delete this entry?</p>
         <div className={cl.modalBtns}>
           <Button onClick={() => handleDeleteSubscriber()}>Delete</Button>
           <Button onClick={() => handleDeleteSubscriberCancel()}>Cancel</Button>
@@ -145,7 +168,13 @@ function Subscribers() {
             />
           </label>
           <div className={cl.modalBtns}>
-            <Button onClick={(e) => handleCreateSubscriber(e)}>Create</Button>
+            {address === "" || fullName === "" ? (
+              <Button disabled onClick={(e) => handleCreateSubscriber(e)}>
+                Create
+              </Button>
+            ) : (
+              <Button onClick={(e) => handleCreateSubscriber(e)}>Create</Button>
+            )}
             <Button onClick={() => handleCreateSubscriberCancel()}>
               Cancel
             </Button>
@@ -194,12 +223,17 @@ function Subscribers() {
           update={fetchSubscribers}
           setQuery={setSearchQuery}
         />
-        <div>
+        <div className={cl.table}>
           <Table
             data={subscribers}
             headers={["ID", "Full name", "Address"]}
             deleteItem={handleOpenModalDeleteSubscriber}
             updateItem={handleOpenModalUpdateSubscriber}
+          />
+          <Pagination
+            currentPage={currentPage}
+            pageCount={pageCount}
+            onChangePage={onChangePage}
           />
         </div>
       </Container>

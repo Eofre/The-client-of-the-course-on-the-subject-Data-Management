@@ -80,6 +80,7 @@ function Subscriptions() {
           <label>
             Subscription start date:
             <Input
+              type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               placeholder="2023-01-07"

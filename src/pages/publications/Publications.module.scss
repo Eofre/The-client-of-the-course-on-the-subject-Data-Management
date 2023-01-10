@@ -5,6 +5,14 @@
   color: $color-two;
 }
 
+.table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
 .btn {
   font-size: 18px;
   color: $color-two;
@@ -34,4 +42,10 @@
   max-width: 250px;
   border-radius: $border-radius;
   opacity: 90%;
+}
+
+.pag {
+  button {
+    color: #fff;
+  }
 }

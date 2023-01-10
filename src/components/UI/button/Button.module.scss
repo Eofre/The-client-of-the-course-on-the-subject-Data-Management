@@ -13,4 +13,13 @@
   &:hover {
     box-shadow: 0px 0px 15px $color-one;
   }
+
+  &:disabled {
+    opacity: 70%;
+  }
+
+  &:disabled:hover {
+    opacity: 70%;
+    box-shadow: none;
+  }
 }

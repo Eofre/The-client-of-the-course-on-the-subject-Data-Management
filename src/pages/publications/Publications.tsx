@@ -7,183 +7,258 @@ import Modal from "../../components/UI/modal/Modal";
 import Button from "../../components/UI/button/Button";
 import Service from "../../API/Serviсe";
 import Tools from "../../components/tools/Tools";
+import Pagination from "../../components/pagination/Pagination";
+import { Publication } from "../../types/types";
 
 function Publications() {
-  const [modal, setModal] = useState<boolean>(false);
-  const [modalDelete, setModalDelete] = useState<boolean>(false);
-  const [modalUpdate, setModalUpdate] = useState<boolean>(false);
-  const [publications, setPublications] = useState([]);
-  const [title, setTitle] = useState<string>("");
-  const [cost, setCost] = useState<string | number>("");
-  const [id, setID] = useState<string | number>("");
-  const [itemDeleteId, setItemDeleteId] = useState<string | number>("");
-  const [query, setQuery] = useState<string>("");
+  const [publications, setPublications] = useState<Publication[]>([]);
+
+  const [modalCreatePublication, setModalCreatePublication] =
+    useState<boolean>(false);
+  const [modalDeletePublication, setModalDeletePublication] =
+    useState<boolean>(false);
+  const [modalUpdatePublication, setModalUpdatePublication] =
+    useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<boolean>(false);
+
+  const [titlePublication, setTitlePublication] = useState<string>("");
+  const [costPublication, setCostPublication] = useState<string>("");
+  const [initialTitlePublication, setInitialTitlePublication] =
+    useState<string>("");
+  const [initialCostPublication, setInitialCostPublication] =
+    useState<string>("");
+
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [id, setId] = useState<string | number>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageCount, setPageCount] = useState<number>(1);
+  const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     fetchPublications();
   }, []);
 
   useEffect(() => {
-    searchPublications();
-  }, [query]);
+    fetchPublications();
+  }, [currentPage, searchQuery]);
 
   async function fetchPublications() {
-    const publications = await Service.getAll("publications");
-    setPublications(publications);
-  }
-
-  async function searchPublications() {
-    const publications = await Service.search(
+    const data = await Service.getAll(
       "publications",
-      query.toLowerCase()
+      currentPage,
+      searchQuery.toLowerCase()
     );
-    setPublications(publications);
+    setPublications(data.publications);
+    setPageCount(parseInt(data.numberOfPages));
   }
 
-  async function postPublication() {
-    await Service.createItem("publications", { title, cost });
+  async function createPublication() {
+    setMessage(
+      await Service.createItem("publications", {
+        titlePublication,
+        costPublication,
+      })
+    );
+    setModalMessage(true);
   }
 
-  async function updatePublicationApi() {
-    await Service.updateItem("publications", { id, title, cost });
+  async function deletePublication() {
+    setMessage(await Service.deleteItem("publications", id));
+    setModalMessage(true);
   }
 
-  async function deletePublicationApi(id: string | number) {
-    await Service.deleteItem("publications", id);
+  async function updatePublication() {
+    setMessage(
+      await Service.updateItem("publications", {
+        id,
+        titlePublication,
+        costPublication,
+      })
+    );
+    setModalMessage(true);
   }
-  function updatePublication(
+
+  async function handleCreatePublication(
+    e: React.MouseEvent<HTMLButtonElement>
+  ) {
+    await createPublication();
+    setModalCreatePublication(false);
+    await fetchPublications();
+  }
+  function handleOpenModalCreatePublication() {
+    setId("");
+    setTitlePublication("");
+    setCostPublication("");
+    setModalCreatePublication(true);
+  }
+
+  function handleOpenModalDeletePublication(id: string | number) {
+    setModalDeletePublication(true);
+    setId(id);
+  }
+
+  function handleOpenModalUpdatePublication(
     id: string | number,
     title: string,
-    cost: string | number
+    cost: string
   ) {
-    setID(id);
-    setTitle(title);
-    setCost(cost);
-    setModalUpdate(true);
+    setInitialCostPublication(cost);
+    setInitialTitlePublication(title);
+
+    setId(id);
+    setTitlePublication(title);
+    setCostPublication(cost);
+
+    setModalUpdatePublication(true);
+  }
+  console.log(initialCostPublication);
+  async function handleDeletePublication() {
+    await deletePublication();
+    setModalDeletePublication(false);
+    await fetchPublications();
   }
 
-  function onClickUpdate() {
-    updatePublicationApi();
-    setModalUpdate(false);
-    setID("");
-    setTitle("");
-    setCost("");
+  function handleDeletePublicationCancel() {
+    setModalDeletePublication(false);
   }
 
-  function onClickCancelUpdate() {
-    setModalUpdate(false);
-    setID("");
-    setTitle("");
-    setCost("");
+  function handleCreatePublicationCancel() {
+    setModalCreatePublication(false);
   }
 
-  function deletePublication(id: string | number) {
-    setModalDelete(true);
-    setItemDeleteId(id);
+  async function handleUpdatePublication() {
+    await updatePublication();
+    setModalUpdatePublication(false);
+    await fetchPublications();
   }
 
-  function onClickDelete() {
-    deletePublicationApi(itemDeleteId);
-    setModalDelete(false);
-
-    setItemDeleteId("");
+  function handleUpdatePublicationCancel() {
+    setModalUpdatePublication(false);
   }
-  function onClickCancel() {
-    setModalDelete(false);
-    setItemDeleteId("");
-  }
-
-  function createPublication(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    postPublication();
-    setModal(false);
-    setTitle("");
-    setCost("");
-  }
-
-  function openModalAdd() {
-    setCost("");
-    setTitle("");
-    setID("");
-    setModal(true);
-  }
+  const onChangePage = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <section>
+      <Modal visible={modalMessage} setVisible={setModalMessage}>
+        <h3>Message</h3>
+        <p>{message}</p>
+        <div className={cl.modalBtns}>
+          <Button onClick={() => setModalMessage(false)}>Ok</Button>
+        </div>
+      </Modal>
+      <Modal
+        visible={modalDeletePublication}
+        setVisible={setModalDeletePublication}
+      >
+        <h3>Message</h3>
+        <p>Are you sure you want to delete this entry?</p>
+        <div className={cl.modalBtns}>
+          <Button onClick={() => handleDeletePublication()}>Delete</Button>
+          <Button onClick={() => handleDeletePublicationCancel()}>
+            Cancel
+          </Button>
+        </div>
+      </Modal>
+      <Modal
+        visible={modalCreatePublication}
+        setVisible={setModalCreatePublication}
+      >
+        <h3>Creating the new entry</h3>
+        <form className={cl.form}>
+          <label>
+            Title:
+            <Input
+              value={titlePublication}
+              onChange={(e) => setTitlePublication(e.target.value)}
+            />
+          </label>
+          <label>
+            Cost:
+            <Input
+              value={costPublication}
+              onChange={(e) => setCostPublication(e.target.value)}
+            />
+          </label>
+          <div className={cl.modalBtns}>
+            {costPublication === "" || titlePublication === "" ? (
+              <Button disabled onClick={(e) => handleCreatePublication(e)}>
+                Create
+              </Button>
+            ) : (
+              <Button onClick={(e) => handleCreatePublication(e)}>
+                Create
+              </Button>
+            )}
+            <Button onClick={() => handleCreatePublicationCancel()}>
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </Modal>
+      <Modal
+        visible={modalUpdatePublication}
+        setVisible={setModalUpdatePublication}
+      >
+        <h3>Update the entry</h3>
+        <form className={cl.form}>
+          <label style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            Title:
+            <Input
+              value={titlePublication}
+              onChange={(e) => setTitlePublication(e.target.value)}
+            />
+          </label>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              marginTop: "7px",
+            }}
+          >
+            Cost:
+            <Input
+              value={costPublication}
+              onChange={(e) => setCostPublication(e.target.value)}
+            />
+          </label>
+          <div className={cl.modalBtns}>
+            {titlePublication === "" ||
+            costPublication === "" ||
+            (costPublication === initialCostPublication &&
+              titlePublication === initialTitlePublication) ? (
+              <Button disabled onClick={() => handleUpdatePublication()}>
+                Update
+              </Button>
+            ) : (
+              <Button onClick={() => handleUpdatePublication()}>Update</Button>
+            )}
+            <Button onClick={() => handleUpdatePublicationCancel()}>
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </Modal>
       <Container>
         <h1>Publications table</h1>
         <Tools
-          setQuery={setQuery}
-          openModalAdd={openModalAdd}
+          openModalAdd={handleOpenModalCreatePublication}
           update={fetchPublications}
+          setQuery={setSearchQuery}
         />
-        <Modal visible={modalDelete} setVisible={setModalDelete}>
-          <h3>Are you sure you want to delete this entry?</h3>
-          <div className={cl.modalBtns}>
-            <Button onClick={() => onClickDelete()}>Delete</Button>
-            <Button onClick={() => onClickCancel()}>Cancel</Button>
-          </div>
-        </Modal>
-        <Modal visible={modal} setVisible={setModal}>
-          <h3>Creating the new entry</h3>
-          <form className={cl.form}>
-            <label
-              style={{ display: "flex", alignItems: "center", gap: "5px" }}
-            >
-              Title:
-              <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "5px",
-                marginTop: "7px",
-              }}
-            >
-              Cost:
-              <Input value={cost} onChange={(e) => setCost(e.target.value)} />
-            </label>
-            <Button
-              style={{ marginTop: "15px" }}
-              onClick={(e) => createPublication(e)}
-            >
-              Add the publication
-            </Button>
-          </form>
-        </Modal>
-        <Modal visible={modalUpdate} setVisible={setModalUpdate}>
-          <h3>Update the entry</h3>
-          <form className={cl.form}>
-            <label
-              style={{ display: "flex", alignItems: "center", gap: "5px" }}
-            >
-              Title:
-              <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "5px",
-                marginTop: "7px",
-              }}
-            >
-              Cost:
-              <Input value={cost} onChange={(e) => setCost(e.target.value)} />
-            </label>
-            <div className={cl.modalBtns}>
-              <Button onClick={() => onClickUpdate()}>Update</Button>
-              <Button onClick={() => onClickCancelUpdate()}>Cancel</Button>
-            </div>
-          </form>
-        </Modal>
-        <div>
+        <div className={cl.table}>
           <Table
-            deleteItem={deletePublication}
-            updateItem={updatePublication}
             data={publications}
             headers={["Index", "Title", "Cost"]}
+            deleteItem={handleOpenModalDeletePublication}
+            updateItem={handleOpenModalUpdatePublication}
+          />
+          <Pagination
+            currentPage={currentPage}
+            pageCount={pageCount}
+            onChangePage={onChangePage}
           />
         </div>
       </Container>

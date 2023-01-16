@@ -105,6 +105,7 @@ function Subscriptions() {
   async function updateSubscription() {
     setMessage(
       await Service.updateItem("subscriptions", {
+        idEntry,
         indexPublication,
         idSubscriber,
         monthOfSub,
@@ -113,7 +114,13 @@ function Subscriptions() {
     );
     setModalMessage(true);
   }
-
+  console.log({
+    idEntry,
+    indexPublication,
+    idSubscriber,
+    monthOfSub,
+    startDate,
+  });
   async function handleCreateSubscription(
     e: React.MouseEvent<HTMLButtonElement>
   ) {
@@ -135,7 +142,6 @@ function Subscriptions() {
   function handleOpenModalDeleteSubscription(item: Subscription) {
     setModalDeleteSubscription(true);
     setIdEntry(item.idEntry);
-    console.log(item.idEntry);
   }
 
   function handleOpenModalUpdateSubscription(item: Subscription) {
@@ -143,6 +149,7 @@ function Subscriptions() {
     setIdSubscriber(item.ID);
     setMonthOfSub(item.MonthOfSub);
     setStartDate(item.StartDate);
+    setIdEntry(item.idEntry);
 
     setInitialIndexPublication(item.Index);
     setInitialIdSubscriber(item.ID);

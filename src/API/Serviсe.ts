@@ -49,6 +49,7 @@ export default class Service {
       message = "The entry has been changed successfully!";
     } catch (e) {
       message = "Error";
+      console.log(e);
     }
     return message;
   }

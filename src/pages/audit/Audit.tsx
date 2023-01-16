@@ -13,8 +13,10 @@ const Audit: FC<AuditProps> = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageCount, setPageCount] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(6);
+  const [limit, setLimit] = useState<number>(5);
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const [isAuditLoading, setIsAuditLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchAuditList();
@@ -25,9 +27,11 @@ const Audit: FC<AuditProps> = () => {
   }, [currentPage, searchQuery]);
 
   async function fetchAuditList() {
+    setIsAuditLoading(true);
     const data = await Service.getAll("audit", currentPage, limit, searchQuery);
     setAuditList(data.events);
     setPageCount(parseInt(data.numberOfPages));
+    setIsAuditLoading(false);
   }
 
   const onChangePage = (page: number) => {
@@ -42,6 +46,7 @@ const Audit: FC<AuditProps> = () => {
           <Table
             data={auditList}
             headers={["ID", "Name", "Time", "Edited by"]}
+            isLoading={isAuditLoading}
           />
           <Pagination
             currentPage={currentPage}

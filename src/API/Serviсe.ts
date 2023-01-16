@@ -5,7 +5,7 @@ export default class Service {
     url: string,
     page: number | string,
     limit: number,
-    query?: string
+    query: string
   ) {
     try {
       const response = await axios.get(
@@ -29,7 +29,7 @@ export default class Service {
     return message;
   }
 
-  static async deleteItem(url: string, id: string | number) {
+  static async deleteItem(url: string, id: string) {
     let message: string = "";
     try {
       await axios.delete(`http://localhost:5000/${url}/${id}`);

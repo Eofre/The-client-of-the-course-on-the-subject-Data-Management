@@ -1,49 +1,18 @@
 import React, { FC, useState } from "react";
 import cl from "./Sidebar.module.scss";
-import {
-  FaBars,
-  FaBookOpen,
-  FaHome,
-  FaUsers,
-  FaBookReader,
-  FaDesktop,
-} from "react-icons/fa";
-import { Link, NavLink } from "react-router-dom";
+import { FaBars } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
+import { menuItem } from "../../types/types";
 
 interface SidebarProps {
   children: React.ReactNode;
+  items: menuItem[];
 }
 
-const Sidebar: FC<SidebarProps> = ({ children }) => {
+const Sidebar: FC<SidebarProps> = ({ children, items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-  const menuItems = [
-    {
-      path: "/",
-      name: "Home",
-      icon: <FaHome />,
-    },
-    {
-      path: "/publications",
-      name: "Publications",
-      icon: <FaBookOpen />,
-    },
-    {
-      path: "/subscribers",
-      name: "Subscribers",
-      icon: <FaUsers />,
-    },
-    {
-      path: "/audit",
-      name: "Audit",
-      icon: <FaDesktop />,
-    },
-    // {
-    //   path: "/subscriberPublications",
-    //   name: "Subscriptions",
-    //   icon: <FaBookReader />,
-    // },
-  ];
+
   return (
     <div style={{ display: "flex" }}>
       <div className={cl.sidebar} style={{ width: isOpen ? "200px" : "50px" }}>
@@ -56,7 +25,7 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
           </div>
         </div>
         <div>
-          {menuItems.map((item, index) => (
+          {items.map((item, index) => (
             <NavLink
               to={item.path}
               key={item.path}

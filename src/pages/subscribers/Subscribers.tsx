@@ -24,7 +24,7 @@ function Subscribers() {
   const [fullName, setFullName] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [id, setId] = useState<string | number>("");
+  const [id, setId] = useState<string>("");
   const [initialFullName, setInitialTFullName] = useState<string>("");
   const [initialAddress, setInitialAddress] = useState<string>("");
 
@@ -32,6 +32,9 @@ function Subscribers() {
   const [pageCount, setPageCount] = useState<number>(1);
   const [limit, setLimit] = useState<number>(8);
   const [message, setMessage] = useState<string>("");
+
+  const [isSubscribersLoading, setIsSubscribersLoading] =
+    useState<boolean>(false);
 
   useEffect(() => {
     fetchSubscribers();
@@ -42,6 +45,7 @@ function Subscribers() {
   }, [currentPage, searchQuery]);
 
   async function fetchSubscribers() {
+    setIsSubscribersLoading(true);
     const data = await Service.getAll(
       "subscribers",
       currentPage,
@@ -50,6 +54,7 @@ function Subscribers() {
     );
     setSubscribers(data.subscribers);
     setPageCount(parseInt(data.numberOfPages));
+    setIsSubscribersLoading(false);
   }
 
   async function createSubscriber() {
@@ -88,22 +93,18 @@ function Subscribers() {
     setModalCreateSubscriber(true);
   }
 
-  function handleOpenModalDeleteSubscriber(id: string | number) {
+  function handleOpenModalDeleteSubscriber(item: Subscriber) {
     setModalDeleteSubscriber(true);
-    setId(id);
+    setId(item.ID);
   }
 
-  function handleOpenModalUpdateSubscriber(
-    id: string | number,
-    fullName: string,
-    address: string
-  ) {
-    setId(id);
-    setFullName(fullName);
-    setAddress(address);
+  function handleOpenModalUpdateSubscriber(item: Subscriber) {
+    setId(item.ID);
+    setFullName(item.FullName);
+    setAddress(item.Address);
 
-    setInitialAddress(address);
-    setInitialTFullName(fullName);
+    setInitialAddress(item.Address);
+    setInitialTFullName(item.FullName);
 
     setModalUpdateSubscriber(true);
   }
@@ -244,6 +245,7 @@ function Subscribers() {
             headers={["ID", "Full name", "Address"]}
             deleteItem={handleOpenModalDeleteSubscriber}
             updateItem={handleOpenModalUpdateSubscriber}
+            isLoading={isSubscribersLoading}
           />
           <Pagination
             currentPage={currentPage}

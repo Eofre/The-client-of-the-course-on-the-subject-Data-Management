@@ -1,11 +1,17 @@
 import React, { ButtonHTMLAttributes } from "react";
 import cl from "./Button.module.scss";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactChild | React.ReactNode;
+enum Colors {
+  primary = "#4e428a",
+  secondary = "#201f1f",
 }
 
-export default function Button({ children, ...rest }: ButtonProps) {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactChild | React.ReactNode;
+  color?: Colors;
+}
+
+export default function Button({ children, color, ...rest }: ButtonProps) {
   return (
     <button className={cl.btn} {...rest}>
       {children}

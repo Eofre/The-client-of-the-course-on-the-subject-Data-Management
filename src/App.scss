@@ -28,6 +28,26 @@ input {
   border: none;
 }
 
+select {
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  outline: none;
+  border: none;
+  padding: 7px 25px;
+  width: 100%;
+  background-color: $color-three;
+  color: $color-two;
+  border-radius: 5px;
+}
+
+option {
+  outline: none;
+  border: none;
+}
+
 textarea {
   resize: none;
   background: transparent;

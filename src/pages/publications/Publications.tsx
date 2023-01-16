@@ -29,11 +29,14 @@ function Publications() {
     useState<string>("");
 
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [id, setId] = useState<string | number>("");
+  const [id, setId] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageCount, setPageCount] = useState<number>(1);
   const [limit, setLimit] = useState<number>(8);
   const [message, setMessage] = useState<string>("");
+
+  const [isPublicationsLoading, setIsPublicationsLoading] =
+    useState<boolean>(false);
 
   useEffect(() => {
     fetchPublications();
@@ -44,6 +47,7 @@ function Publications() {
   }, [currentPage, searchQuery]);
 
   async function fetchPublications() {
+    setIsPublicationsLoading(true);
     const data = await Service.getAll(
       "publications",
       currentPage,
@@ -52,6 +56,7 @@ function Publications() {
     );
     setPublications(data.publications);
     setPageCount(parseInt(data.numberOfPages));
+    setIsPublicationsLoading(false);
   }
 
   async function createPublication() {
@@ -94,26 +99,22 @@ function Publications() {
     setModalCreatePublication(true);
   }
 
-  function handleOpenModalDeletePublication(id: string | number) {
+  function handleOpenModalDeletePublication(item: Publication) {
     setModalDeletePublication(true);
-    setId(id);
+    setId(item.Index);
   }
 
-  function handleOpenModalUpdatePublication(
-    id: string | number,
-    title: string,
-    cost: string
-  ) {
-    setInitialCostPublication(cost);
-    setInitialTitlePublication(title);
+  function handleOpenModalUpdatePublication(item: Publication) {
+    setInitialCostPublication(item.Cost);
+    setInitialTitlePublication(item.NamePublication);
 
-    setId(id);
-    setTitlePublication(title);
-    setCostPublication(cost);
+    setId(item.Index);
+    setTitlePublication(item.NamePublication);
+    setCostPublication(item.Cost);
 
     setModalUpdatePublication(true);
   }
-  console.log(initialCostPublication);
+
   async function handleDeletePublication() {
     await deletePublication();
     setModalDeletePublication(false);
@@ -253,6 +254,7 @@ function Publications() {
             headers={["Index", "Title", "Cost"]}
             deleteItem={handleOpenModalDeletePublication}
             updateItem={handleOpenModalUpdatePublication}
+            isLoading={isPublicationsLoading}
           />
           <Pagination
             currentPage={currentPage}

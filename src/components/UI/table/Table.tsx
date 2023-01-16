@@ -1,12 +1,14 @@
 import React, { FC, TableHTMLAttributes } from "react";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { Publication, Subscriber, Subscription } from "../../../types/types";
 import cl from "./Table.module.scss";
 
 interface TableProps extends TableHTMLAttributes<HTMLTableElement> {
   headers: string[];
   data: object[];
-  deleteItem?: (id: any) => void;
-  updateItem?: (id: number | string, title: string, cost: string) => void;
+  deleteItem?: (item: any) => void;
+  updateItem?: (item: any) => void;
+  isLoading?: boolean;
 }
 
 const Table: FC<TableProps> = ({
@@ -14,6 +16,7 @@ const Table: FC<TableProps> = ({
   headers,
   deleteItem,
   updateItem,
+  isLoading,
   ...rest
 }) => {
   return (
@@ -28,41 +31,40 @@ const Table: FC<TableProps> = ({
         </tr>
       </thead>
       <tbody>
-        {data.map((row, index) => (
-          <tr key={index} style={{ cursor: "pointer" }}>
-            {Object.values(row).map((item, index) => (
-              <th key={`${index}fdfd`} className={cl.row}>
-                {item}
-              </th>
-            ))}
-            {!updateItem ? (
-              <></>
-            ) : (
-              <th>
-                <button
-                  onClick={() =>
-                    updateItem?.(
-                      Object.values(row)[0],
-                      Object.values(row)[1],
-                      Object.values(row)[2]
-                    )
-                  }
-                >
-                  <FaPencilAlt className={cl.icon} />
-                </button>
-              </th>
-            )}
-            {!deleteItem ? (
-              <></>
-            ) : (
-              <th>
-                <button onClick={() => deleteItem?.(Object.values(row)[0])}>
-                  <FaTrashAlt className={cl.icon} />
-                </button>
-              </th>
-            )}
-          </tr>
-        ))}
+        {data.length === 0 ? (
+          <p className={cl.message}>
+            {isLoading ? "Loading..." : "No matches..."}
+          </p>
+        ) : (
+          data.map((row, index) => (
+            <tr key={index}>
+              {Object.values(row).map((item, index) => (
+                <th key={`${index}fdfd`} className={cl.row}>
+                  {item}
+                </th>
+              ))}
+              {!updateItem ? (
+                <></>
+              ) : (
+                <th>
+                  <button onClick={() => updateItem?.(row)}>
+                    <FaPencilAlt className={cl.icon} />
+                  </button>
+                </th>
+              )}
+              {!deleteItem ? (
+                <></>
+              ) : (
+                <th>
+                  {/* deleteItem?.(Object.values(row)[0]) */}
+                  <button onClick={() => deleteItem?.(row)}>
+                    <FaTrashAlt className={cl.icon} />
+                  </button>
+                </th>
+              )}
+            </tr>
+          ))
+        )}
       </tbody>
     </table>
   );
